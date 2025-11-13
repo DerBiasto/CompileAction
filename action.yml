@@ -2,6 +2,9 @@ name: 'Compile TeX Files'
 author: 'Tobias Udtke'
 
 inputs:
+  pull:
+    description: 'Whether to pull before compiling'
+    default: false
   compile-pattern:
     description: 'The pattern for which texfiles to compile'
   aux-directory:
@@ -20,6 +23,11 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: checkout repository
+      uses: actions/checkout@v4
+    - name: update repository
+      run: git pull --ff-only
+      if: inputs.pull || inputs.commit
     - name: compile .tex files
       run: |
         echo "Pattern: ${{ inputs.compile-pattern }}"
@@ -40,6 +48,7 @@ runs:
               git add -f ${{ inputs.aux-directory }}
           fi
           if ! git diff-index --quiet HEAD; then
+              git status
               git commit -m "[auto] compile all PDFs" || true
               git log -n 1
               git push
