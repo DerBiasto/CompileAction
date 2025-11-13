@@ -32,6 +32,10 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - run: |
+        cat <<'EOF'
+        ${{ toJSON(forgejo) }}
+        EOF
     - name: checkout repository
       uses: actions/checkout@v4
     - name: update repository
