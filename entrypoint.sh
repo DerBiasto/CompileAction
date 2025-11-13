@@ -2,4 +2,4 @@
 
 set -e
 
-echo "$1"
+echo "$1" >> $GITHUB_OUTPUT
