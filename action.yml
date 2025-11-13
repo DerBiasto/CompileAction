@@ -10,10 +10,9 @@ runs:
   steps:
     - run: |
         echo "Pattern: ${{ inputs.pattern }}"
-        find -name "${{ inputs.pattern }}"
         find -name "${{ inputs.pattern }}" | 
           while read file
           do
             echo "$file"
-            echo $(dirname "$file")
+            latex-mk -pdf -output-directory=$(dirname "$file") "$file"
           done
