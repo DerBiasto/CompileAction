@@ -8,4 +8,4 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - run: echo "${{ inputs.message }}"
+    - run: echo "${{ inputs.pattern }}"
