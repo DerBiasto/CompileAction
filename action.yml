@@ -7,6 +7,7 @@ inputs:
     default: false
   compile-pattern:
     description: 'The pattern for which texfiles to compile'
+    default: '*.tex'
   aux-directory:
     description: 'Directory in which to commit latexmk aux files'
     default: '.aux'
