@@ -53,6 +53,8 @@ runs:
     - name: commit pdfs
       if: ${{ inputs.commit == true || inputs.commit == 'true' }}
       run: |
+        echo "${{ github.event.pusher.name }}"
+        echo "${{ github.event.pusher.email }}"
         git config user.name ${{ github.event.pusher.name }}
         git config user.email ${{ github.event.pusher.email }}
         git status
