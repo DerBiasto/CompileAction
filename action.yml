@@ -1,0 +1,12 @@
+name: 'Compile TeX Files'
+author: 'Me, I wrote it'
+
+inputs:
+  pattern:
+    description: 'The pattern for which texfiles to compile'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.pattern }}
