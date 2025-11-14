@@ -42,9 +42,9 @@ runs:
       run: |
         echo ""
         echo "Pattern: ${{ inputs.compile-pattern }}"
-        find -name "${{ inputs.compile-pattern }}"
+        find -wholename "${{ inputs.compile-pattern }}"
         echo ""
-        find -name "${{ inputs.compile-pattern }}" |
+        find -wholename "${{ inputs.compile-pattern }}" |
           while read file
           do
             echo "$file"
