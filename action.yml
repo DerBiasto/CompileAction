@@ -5,6 +5,9 @@ inputs:
   ssh-key:
     description: ssh-key to use for checkout and all following steps.
     default: null
+  github-server-url:
+    description: server url to use for checkout and all following steps.
+    default: null
   pull:
     description: 'Whether to pull before compiling'
     default: false
@@ -39,6 +42,7 @@ runs:
     - name: checkout repository
       uses: actions/checkout@v4
       with:
+        github-server-url: ${{ inputs.github-server-url }}
         ssh-key: ${{ inputs.ssh-key }}
     - name: update repository
       run: git pull --ff-only
