@@ -60,7 +60,10 @@ runs:
       if: ${{ inputs.diff != null }}
       shell: bash
       run: |
+        set -x
         git fetch
+        git branch --all
+        git rev-parse --short "${{ inputs.diff }}"
         find -wholename "${{ inputs.compile-pattern }}" |
           while read file
           do
