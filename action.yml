@@ -1,5 +1,6 @@
 name: 'Compile TeX Files'
 author: 'Tobias Udtke'
+description: Compile and optionally commit or upload some tex files.
 
 inputs:
   ssh-key:
@@ -17,6 +18,9 @@ inputs:
   compile-pattern:
     description: 'The pattern for which texfiles to compile'
     default: '*.tex'
+  diff:
+    description: 'If given, create latexdiffs relative to this git ref'
+    default: null
   aux-directory:
     description: 'Directory in which to commit latexmk aux files'
     default: '.aux'
@@ -49,9 +53,21 @@ runs:
         ssh-key: ${{ inputs.ssh-key }}
         ssh-user: ${{ inputs.ssh-user }}
     - name: update repository
+      shell: bash
       run: git pull --ff-only
       if: ${{ inputs.pull == true || inputs.pull == 'true' || inputs.commit == true || inputs.commit == 'true' }}
+    - name: Generate latex diff files
+      if: ${{ inputs.diff != null }}
+      shell: bash
+      run: |
+        find -wholename "${{ inputs.compile-pattern }}" |
+          while read file
+          do
+            echo "Creating diff for $file"
+            latexdiff-git -r "${{ inputs.diff }}" "$file"
+          done
     - name: compile .tex files
+      shell: bash
       run: |
         echo ""
         echo "Pattern: ${{ inputs.compile-pattern }}"
@@ -64,6 +80,7 @@ runs:
             latexmk -pdf -output-directory=$(dirname "$file") -aux-directory=${{ inputs.aux-directory }} "$file"
           done
     - name: commit pdfs
+      shell: bash
       if: ${{ inputs.commit == true || inputs.commit == 'true' }}
       run: |
         echo "${{ github.event.pusher.full_name }}"
