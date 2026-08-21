@@ -21,6 +21,9 @@ inputs:
   diff:
     description: 'If given, create latexdiffs relative to this git ref'
     default: null
+  diff-rev-parse:
+    description: 'If true, parse the given ref (see input "diff" above) into its shortened sha.'
+    default: false
   aux-directory:
     description: 'Directory in which to commit latexmk aux files'
     default: '.aux'
@@ -60,15 +63,16 @@ runs:
       if: ${{ inputs.diff != null }}
       shell: bash
       run: |
-        set -x
         git fetch
-        git branch --all
-        git rev-parse --short "${{ inputs.diff }}"
+        ref="${{ inputs.diff }}"
+        if [[ ${{ inputs.diff-rev-parse == true || inputs.diff-rev-parse == 'true' }} ]]; then 
+          ref=$( git rev-parse --short "${ref}")
+        fi
         find -wholename "${{ inputs.compile-pattern }}" |
           while read file
           do
             echo "Creating diff for $file"
-            latexdiff-git -r "$( git rev-parse --short "${{ inputs.diff }}")" "$file"
+            latexdiff-git -r "${ref}" "$file"
           done
     - name: compile .tex files
       shell: bash
