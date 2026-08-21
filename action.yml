@@ -65,7 +65,7 @@ runs:
           while read file
           do
             echo "Creating diff for $file"
-            latexdiff-git -r "${{ inputs.diff }}" "$file"
+            latexdiff-git -r "$( git rev-parse --short "${{ inputs.diff }}")" "$file"
           done
     - name: compile .tex files
       shell: bash
