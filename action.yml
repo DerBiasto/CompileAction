@@ -60,6 +60,7 @@ runs:
       if: ${{ inputs.diff != null }}
       shell: bash
       run: |
+        git fetch
         find -wholename "${{ inputs.compile-pattern }}" |
           while read file
           do
